@@ -1,0 +1,2025 @@
+{% extends "base_logged.html" %}
+
+{% block title %}
+
+    {{ "المنتجات" if current_lang == "ar" else "Products" }}
+
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root{
+
+    --primary:#DAAAA4;
+    --primary-dark:#C97C8F;
+
+    --light:#FFF7F8;
+    --white:#ffffff;
+
+    --dark:#333;
+    --gray:#777;
+
+
+    --border:#F1D8DE;
+
+    --shadow:
+        0 15px 35px rgba(0,0,0,.08);
+
+}
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
+body{
+
+    background:#FFF8FA;
+
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.products-hero{
+
+    height:340px;
+
+    background:
+        url("{{ url_for('static', filename='images/hero.png') }}")
+        center/cover;
+
+    position:relative;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    overflow:hidden;
+
+}
+
+
+.products-hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(0,0,0,.35);
+
+}
+
+
+.hero-content{
+
+    position:relative;
+
+    z-index:5;
+
+    text-align:center;
+
+    color:white;
+
+    padding:20px;
+
+}
+
+
+.hero-content h1{
+
+    font-size:55px;
+
+    margin-bottom:15px;
+
+}
+
+
+.hero-content p{
+
+    font-size:19px;
+
+    opacity:.95;
+
+}
+
+
+/* =====================================================
+   TOOLBAR
+===================================================== */
+
+.products-toolbar{
+
+    width:90%;
+
+    max-width:1300px;
+
+    margin:40px auto;
+
+    display:flex;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-product{
+
+    flex:1;
+
+    min-width:320px;
+
+    position:relative;
+
+}
+
+
+.search-product input{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:16px 22px;
+
+    border-radius:50px;
+
+    border:2px solid var(--border);
+
+    font-size:16px;
+
+    outline:none;
+
+    background:white;
+
+    transition:.3s;
+
+}
+
+
+.search-product input:focus{
+
+    border-color:var(--primary);
+
+    box-shadow:
+        0 5px 20px rgba(218,170,164,.15);
+
+}
+
+
+/* =====================================================
+   SEARCH BUTTON
+===================================================== */
+
+.search-submit{
+
+    position:absolute;
+
+    right:7px;
+
+    top:7px;
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+.search-submit:hover{
+
+    background:var(--primary-dark);
+
+    transform:scale(1.05);
+
+}
+
+
+/* =====================================================
+   CATEGORY FILTER
+===================================================== */
+
+.category-filter{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+}
+
+
+.category-btn{
+
+    padding:12px 22px;
+
+    border:none;
+
+    border-radius:40px;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.3s;
+
+    border:2px solid var(--border);
+
+}
+
+
+.category-btn:hover{
+
+    background:var(--primary);
+
+    color:white;
+
+}
+
+
+.category-btn.active{
+
+    background:var(--primary);
+
+    color:white;
+
+}
+
+
+/* =====================================================
+   SEARCH RESULT MESSAGE
+===================================================== */
+
+.search-result{
+
+    width:90%;
+
+    max-width:1300px;
+
+    margin:-15px auto 25px;
+
+    color:#777;
+
+    font-size:16px;
+
+}
+
+
+.search-result strong{
+
+    color:var(--primary-dark);
+
+}
+
+
+/* =====================================================
+   PRODUCTS GRID
+===================================================== */
+
+.products-grid{
+
+    width:90%;
+
+    max-width:1300px;
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(280px,1fr));
+
+    gap:35px;
+
+    padding-bottom:80px;
+
+}
+
+
+/* =====================================================
+   PRODUCT CARD
+===================================================== */
+
+.product-card{
+
+    background:white;
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    box-shadow:var(--shadow);
+
+    transition:.35s;
+
+    position:relative;
+
+    cursor:pointer;
+
+}
+
+
+.product-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.12);
+
+}
+
+
+/* =====================================================
+   PRODUCT IMAGE
+===================================================== */
+
+.product-image{
+
+    height:300px;
+
+    overflow:hidden;
+
+    position:relative;
+
+}
+
+
+.product-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:.4s;
+
+}
+
+
+.product-card:hover
+.product-image img{
+
+    transform:scale(1.08);
+
+}
+
+
+/* =====================================================
+   BADGE
+===================================================== */
+
+.badge{
+
+    position:absolute;
+
+    top:18px;
+
+    left:18px;
+
+    background:#ff4d6d;
+
+    color:white;
+
+    padding:8px 15px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+
+/* =====================================================
+   FAVORITE
+===================================================== */
+
+.favorite-btn{
+
+    position:absolute;
+
+    top:12px;
+
+    right:12px;
+
+    width:40px;
+
+    height:40px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-size:22px;
+
+    transition:.3s;
+
+    z-index:10;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+
+.favorite-btn:hover{
+
+    transform:scale(1.1);
+
+    background:#ffe8ef;
+
+}
+
+
+/* =====================================================
+   PRODUCT INFO
+===================================================== */
+
+.product-info{
+
+    padding:25px;
+
+}
+
+
+.product-title{
+
+    font-size:22px;
+
+    color:#333;
+
+    margin-bottom:12px;
+
+}
+
+
+/* =====================================================
+   PRODUCT PRICE
+===================================================== */
+
+.product-price{
+
+    margin-bottom:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    line-height:1.6;
+
+}
+
+
+/* ORIGINAL PRICE */
+
+.original-price{
+
+    text-decoration:line-through;
+
+    color:#999;
+
+    font-size:17px;
+
+    font-weight:normal;
+
+}
+
+
+/* SALE PRICE */
+
+.sale-price{
+
+    font-size:26px;
+
+    font-weight:bold;
+
+    color:var(--primary-dark);
+
+}
+
+
+/* NORMAL PRICE */
+
+.normal-price{
+
+    font-size:26px;
+
+    font-weight:bold;
+
+    color:var(--primary-dark);
+
+}
+
+
+/* DISCOUNT */
+
+.discount-badge{
+
+    display:inline-block;
+
+    background:#ff4d6d;
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    padding:5px 9px;
+
+    border-radius:20px;
+
+}
+
+
+/* =====================================================
+   RATING
+===================================================== */
+
+.rating{
+
+    color:#ffb703;
+
+    font-size:18px;
+
+    margin-bottom:18px;
+
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.product-actions{
+
+    display:flex;
+
+    gap:10px;
+
+    width:100%;
+
+}
+
+
+/* ADD TO CART */
+
+.add-cart{
+
+    flex:1;
+
+    padding:14px 10px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:var(--primary);
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    position:relative;
+
+    z-index:10;
+
+}
+
+
+.add-cart:hover{
+
+    background:var(--primary-dark);
+
+    transform:translateY(-2px);
+
+}
+
+
+.add-cart:disabled{
+
+    opacity:.7;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+}
+
+
+/* BUY NOW */
+
+.buy-now{
+
+    flex:1;
+
+    padding:14px 10px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#333;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    position:relative;
+
+    z-index:10;
+
+}
+
+
+.buy-now:hover{
+
+    background:#222;
+
+    transform:translateY(-2px);
+
+}
+
+
+.buy-now:disabled{
+
+    opacity:.7;
+
+    cursor:not-allowed;
+
+    transform:none;
+
+}
+
+
+/* =====================================================
+   NO RESULTS
+===================================================== */
+
+.no-results{
+
+    width:90%;
+
+    max-width:800px;
+
+    margin:20px auto 80px;
+
+    padding:50px 20px;
+
+    text-align:center;
+
+    background:white;
+
+    border:2px solid var(--border);
+
+    border-radius:25px;
+
+    box-shadow:var(--shadow);
+
+}
+
+
+.no-results-icon{
+
+    font-size:55px;
+
+    margin-bottom:15px;
+
+}
+
+
+.no-results h2{
+
+    color:#333;
+
+    margin-bottom:10px;
+
+}
+
+
+.no-results p{
+
+    color:#777;
+
+    font-size:16px;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:900px){
+
+    .hero-content h1{
+
+        font-size:42px;
+
+    }
+
+    .hero-content p{
+
+        font-size:17px;
+
+    }
+
+    .products-toolbar{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    .search-product{
+
+        min-width:100%;
+
+    }
+
+    .category-filter{
+
+        justify-content:center;
+
+    }
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media(min-width:481px) and (max-width:900px){
+
+    .products-grid{
+
+        width:92%;
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap:25px;
+
+    }
+
+    .product-image{
+
+        height:260px;
+
+    }
+
+    .product-info{
+
+        padding:20px;
+
+    }
+
+    .product-title{
+
+        font-size:20px;
+
+    }
+
+    .sale-price,
+    .normal-price{
+
+        font-size:23px;
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:480px){
+
+    .products-hero{
+
+        height:270px;
+
+    }
+
+    .hero-content h1{
+
+        font-size:31px;
+
+        line-height:1.4;
+
+    }
+
+    .hero-content p{
+
+        font-size:14px;
+
+        line-height:1.7;
+
+    }
+
+    .products-toolbar{
+
+        width:92%;
+
+        margin:25px auto;
+
+        gap:15px;
+
+    }
+
+    .search-product{
+
+        min-width:100%;
+
+    }
+
+    .search-product input{
+
+        padding:14px 55px 14px 18px;
+
+        font-size:14px;
+
+    }
+
+    .category-filter{
+
+        width:100%;
+
+        display:grid;
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap:8px;
+
+    }
+
+    .category-btn{
+
+        padding:10px 8px;
+
+        font-size:13px;
+
+    }
+
+    .products-grid{
+
+        width:92%;
+
+        grid-template-columns:1fr;
+
+        gap:25px;
+
+    }
+
+    .product-image{
+
+        height:280px;
+
+    }
+
+    .product-info{
+
+        padding:20px;
+
+    }
+
+    .product-title{
+
+        font-size:20px;
+
+    }
+
+    .sale-price,
+    .normal-price{
+
+        font-size:23px;
+
+    }
+
+    .original-price{
+
+        font-size:15px;
+
+    }
+
+    .discount-badge{
+
+        font-size:12px;
+
+        padding:4px 8px;
+
+    }
+
+    .product-actions{
+
+        flex-direction:column;
+
+        gap:8px;
+
+    }
+
+    .add-cart,
+    .buy-now{
+
+        width:100%;
+
+        padding:14px;
+
+        font-size:15px;
+
+    }
+
+}
+
+
+/* =====================================================
+   VERY SMALL MOBILE
+===================================================== */
+
+@media(max-width:350px){
+
+    .hero-content h1{
+
+        font-size:27px;
+
+    }
+
+    .category-btn{
+
+        font-size:12px;
+
+        padding:9px 5px;
+
+    }
+
+    .product-image{
+
+        height:250px;
+
+    }
+
+}
+
+</style>
+
+
+<!-- =====================================================
+                     HERO
+===================================================== -->
+
+<section class="products-hero">
+
+    <div class="hero-content">
+
+        <h1>
+
+            {{ "🧸 إبداعاتنا الجميلة"
+               if current_lang == "ar"
+               else "Our Lovely Creations 🧸" }}
+
+        </h1>
+
+        <p>
+
+            {{ "مصنوعة يدويًا بكل حب، خصيصًا من أجلك."
+               if current_lang == "ar"
+               else "Handmade with love, stitched just for you." }}
+
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+                SEARCH + CATEGORY
+===================================================== -->
+
+<section class="products-toolbar">
+
+
+    <!-- SEARCH -->
+
+    <form
+        action="{{ url_for('search') }}"
+        method="GET"
+        class="search-product"
+    >
+
+        <input
+            type="text"
+            name="q"
+            id="searchInput"
+            value="{{ query or '' }}"
+            placeholder="{{
+                'ابحث عن منتج...'
+                if current_lang == 'ar'
+                else 'Search products...'
+            }}"
+            autocomplete="off"
+        >
+
+        <button
+            type="submit"
+            class="search-submit"
+        >
+
+            🔍
+
+        </button>
+
+    </form>
+
+
+    <!-- CATEGORY -->
+
+    <div class="category-filter">
+
+        <button
+            type="button"
+            class="category-btn active"
+            data-category="all"
+        >
+
+            {{ "الكل"
+               if current_lang == "ar"
+               else "All" }}
+
+        </button>
+
+
+        <button
+            type="button"
+            class="category-btn"
+            data-category="Dolls"
+        >
+
+            {{ "الدمى"
+               if current_lang == "ar"
+               else "Dolls" }}
+
+        </button>
+
+
+        <button
+            type="button"
+            class="category-btn"
+            data-category="Flowers"
+        >
+
+            {{ "الزهور"
+               if current_lang == "ar"
+               else "Flowers" }}
+
+        </button>
+
+
+        <button
+            type="button"
+            class="category-btn"
+            data-category="Keychains"
+        >
+
+            {{ "الميداليات"
+               if current_lang == "ar"
+               else "Keychains" }}
+
+        </button>
+
+
+
+        <button
+            type="button"
+            class="category-btn"
+            data-category="ready_stock"
+        >
+            {{ "تسليم فوري"
+               if current_lang == "ar"
+               else "Ready Stock" }}
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+                SEARCH RESULT
+===================================================== -->
+
+{% if query %}
+
+<div class="search-result">
+
+    {% if products %}
+
+        {{ "نتائج البحث عن" if current_lang == "ar"
+           else "Search results for" }}
+
+        <strong>
+            "{{ query }}"
+        </strong>
+
+        —
+
+        {{ products|length }}
+
+        {{ "منتج" if current_lang == "ar"
+           else "products" }}
+
+    {% endif %}
+
+</div>
+
+{% endif %}
+
+
+<!-- =====================================================
+                    PRODUCTS
+===================================================== -->
+
+{% if products %}
+
+<section
+    class="products-grid"
+    id="productsGrid"
+>
+
+    {% for product in products %}
+
+    <div
+        class="product-card"
+
+        data-name="{{ product.name|lower }}"
+
+        data-category="{{ product.category }}"
+
+        data-product-url="{{
+            url_for(
+                'product_details',
+                product_id=product.id
+            )
+        }}"
+    >
+
+
+        <!-- IMAGE -->
+
+        <div class="product-image">
+
+            {% if product.image %}
+
+            <img
+                src="{{
+                    url_for(
+                        'static',
+                        filename='uploads/products/' ~ product.image
+                    )
+                }}"
+                alt="{{ product.name }}"
+            >
+
+            {% endif %}
+
+
+            <span class="badge">
+
+                {{ "جديد"
+                   if current_lang == "ar"
+                   else "New" }}
+
+            </span>
+
+
+            <!-- FAVORITE -->
+
+            <form
+                action="{{
+                    url_for(
+                        'toggle_wishlist',
+                        product_id=product.id
+                    )
+                }}"
+                method="POST"
+                class="wishlist-form"
+            >
+
+                <button
+                    type="submit"
+                    class="favorite-btn"
+                >
+
+                    {% if product.id in wishlist_ids %}
+
+                        ❤️
+
+                    {% else %}
+
+                        🤍
+
+                    {% endif %}
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- INFO -->
+
+        <div class="product-info">
+
+
+            <h3 class="product-title">
+
+                {{ product.name }}
+
+            </h3>
+
+
+            <div class="rating">
+
+                ★★★★★
+
+            </div>
+
+
+            <!-- =================================================
+                 PRICE
+            ================================================== -->
+
+            <div class="product-price">
+
+                {% if product.sale_price is not none and product.sale_price < product.price %}
+
+
+                    <!-- ORIGINAL PRICE -->
+
+                    <span class="original-price">
+
+                        {{ "%.2f"|format(product.price) }}
+
+                        {{ "ر.س"
+                           if current_lang == "ar"
+                           else "SAR" }}
+
+                    </span>
+
+
+                    <!-- SALE PRICE -->
+
+                    <span class="sale-price">
+
+                        {{ "%.2f"|format(product.sale_price) }}
+
+                        {{ "ر.س"
+                           if current_lang == "ar"
+                           else "SAR" }}
+
+                    </span>
+
+
+                    <!-- DISCOUNT -->
+
+                    <span class="discount-badge">
+
+                        {% set discount_percent =
+                            ((product.price - product.sale_price) / product.price) * 100
+                        %}
+
+                        {{ "%.2f"|format(discount_percent) }}%
+
+                        {{
+                            "خصم"
+                            if current_lang == "ar"
+                            else "OFF"
+                        }}
+
+                    </span>
+
+
+                {% else %}
+
+
+                    <!-- NORMAL PRICE -->
+
+                    <span class="normal-price">
+
+                        {{ "%.2f"|format(product.price) }}
+
+                        {{ "ر.س"
+                           if current_lang == "ar"
+                           else "SAR" }}
+
+                    </span>
+
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- =================================================
+                 ACTION BUTTONS
+            ================================================== -->
+
+            <div class="product-actions">
+
+
+                <!-- ADD TO CART -->
+
+                <button
+                    type="button"
+                    class="add-cart"
+                    data-id="{{ product.id }}"
+                >
+
+                    {{ "🛒 أضف للسلة"
+                       if current_lang == "ar"
+                       else "🛒 Add to Cart" }}
+
+                </button>
+
+
+                <!-- BUY NOW -->
+
+                <button
+                    type="button"
+                    class="buy-now"
+                    data-id="{{ product.id }}"
+                >
+
+                    {{ "⚡ اشتري الآن"
+                       if current_lang == "ar"
+                       else "⚡ Buy Now" }}
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    {% endfor %}
+
+</section>
+
+
+{% else %}
+
+
+<!-- =====================================================
+                    NO RESULTS
+===================================================== -->
+
+<div class="no-results">
+
+    <div class="no-results-icon">
+
+        🔍
+
+    </div>
+
+
+    <h2>
+
+        {{ "لم نجد منتجات مطابقة"
+           if current_lang == "ar"
+           else "No products found" }}
+
+    </h2>
+
+
+    <p>
+
+        {% if query %}
+
+            {{ "جربي البحث بكلمة أخرى أو تصفح جميع المنتجات."
+               if current_lang == "ar"
+               else "Try another search term or browse all products." }}
+
+        {% else %}
+
+            {{ "لا توجد منتجات متاحة حاليًا."
+               if current_lang == "ar"
+               else "There are no products available right now." }}
+
+        {% endif %}
+
+    </p>
+
+</div>
+
+
+{% endif %}
+
+
+<script>
+
+/* =====================================================
+              CURRENT LANGUAGE
+===================================================== */
+
+const currentLang =
+    "{{ current_lang }}";
+
+
+/* =====================================================
+              SEARCH INSIDE PAGE
+===================================================== */
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+const cards =
+    document.querySelectorAll(
+        ".product-card"
+    );
+
+
+if(searchInput){
+
+    searchInput.addEventListener(
+        "input",
+        function(){
+
+            const value =
+                this.value
+                .toLowerCase()
+                .trim();
+
+
+            cards.forEach(card => {
+
+                const name =
+                    (
+                        card.dataset.name ||
+                        ""
+                    ).toLowerCase();
+
+
+                if(
+                    name.includes(value)
+                ){
+
+                    card.style.display =
+                        "";
+
+                }
+
+                else{
+
+                    card.style.display =
+                        "none";
+
+                }
+
+            });
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+              CATEGORY FILTER
+===================================================== */
+
+const buttons =
+    document.querySelectorAll(
+        ".category-btn"
+    );
+
+
+buttons.forEach(btn => {
+
+    btn.addEventListener(
+        "click",
+        function(){
+
+            buttons.forEach(
+                button =>
+                    button.classList.remove(
+                        "active"
+                    )
+            );
+
+
+            this.classList.add(
+                "active"
+            );
+
+
+            const category =
+                this.dataset.category;
+
+
+            cards.forEach(card => {
+
+                const cardCategory =
+                    (card.dataset.category || "").trim().toLowerCase();
+
+                const selectedCategory =
+                    (category || "").trim().toLowerCase();
+
+                const categoryAliases = {
+                    "dolls": ["dolls", "doll"],
+                    "flowers": ["flowers", "flower"],
+                    "keychains": ["keychains", "keychain"],
+                    "custom": ["custom"],
+                    "pattern": ["pattern", "patterns"],
+                    "coaster": ["coaster", "coasters"],
+                    "ready_stock": [
+                        "ready_stock",
+                        "ready stock",
+                        "ready-stock",
+                        "readystock"
+                    ]
+                };
+
+                const allowedCategories =
+                    categoryAliases[selectedCategory] || [selectedCategory];
+
+
+                const cardName =
+                    (
+                        card.dataset.name ||
+                        ""
+                    ).toLowerCase();
+
+
+                const searchValue =
+                    searchInput
+                    ? searchInput.value
+                        .toLowerCase()
+                        .trim()
+                    : "";
+
+
+                const matchesSearch =
+                    cardName.includes(
+                        searchValue
+                    );
+
+
+                const matchesCategory =
+                    selectedCategory === "all" ||
+                    allowedCategories.includes(cardCategory);
+
+
+                if(
+                    matchesSearch &&
+                    matchesCategory
+                ){
+
+                    card.style.display =
+                        "";
+
+                }
+
+                else{
+
+                    card.style.display =
+                        "none";
+
+                }
+
+            });
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+          PRODUCT CARD → DETAILS
+===================================================== */
+
+cards.forEach(card => {
+
+    card.addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target.closest(
+                    ".favorite-btn"
+                ) ||
+
+                event.target.closest(
+                    ".add-cart"
+                ) ||
+
+                event.target.closest(
+                    ".buy-now"
+                )
+            ){
+
+                return;
+
+            }
+
+
+            const url =
+                this.dataset.productUrl;
+
+
+            if(url){
+
+                window.location.href =
+                    url;
+
+            }
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+                ADD TO CART
+===================================================== */
+
+document
+    .querySelectorAll(".add-cart")
+    .forEach(btn => {
+
+        btn.addEventListener(
+            "click",
+            async function(event){
+
+                event.stopPropagation();
+
+
+                const button =
+                    this;
+
+
+                const productId =
+                    button.dataset.id;
+
+
+                button.disabled =
+                    true;
+
+
+                const originalText =
+                    button.innerHTML;
+
+
+                try{
+
+                    const response =
+                        await fetch(
+                            "/api/cart/add",
+                            {
+
+                                method:
+                                    "POST",
+
+                                headers:{
+
+                                    "Content-Type":
+                                        "application/json"
+
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        product_id:
+                                            productId,
+
+                                        quantity:
+                                            1
+
+                                    })
+
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if(
+                        !response.ok ||
+                        !data.success
+                    ){
+
+                        throw new Error(
+
+                            data.error ||
+
+                            (
+                                currentLang === "ar"
+
+                                ? "تعذر إضافة المنتج إلى السلة."
+
+                                : "Could not add the product to cart."
+
+                            )
+
+                        );
+
+                    }
+
+
+                    button.innerHTML =
+
+                        currentLang === "ar"
+
+                        ? "✓ تمت الإضافة"
+
+                        : "✓ Added";
+
+
+                    setTimeout(
+                        function(){
+
+                            button.innerHTML =
+                                originalText;
+
+                            button.disabled =
+                                false;
+
+                        },
+                        1500
+                    );
+
+
+                }
+
+                catch(error){
+
+                    console.error(
+                        "Add to cart error:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message
+                    );
+
+
+                    button.innerHTML =
+                        originalText;
+
+
+                    button.disabled =
+                        false;
+
+                }
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+                BUY NOW
+===================================================== */
+
+document
+    .querySelectorAll(".buy-now")
+    .forEach(btn => {
+
+        btn.addEventListener(
+            "click",
+            async function(event){
+
+                event.stopPropagation();
+
+
+                const button =
+                    this;
+
+
+                const productId =
+                    button.dataset.id;
+
+
+                button.disabled =
+                    true;
+
+
+                const originalText =
+                    button.innerHTML;
+
+
+                button.innerHTML =
+
+                    currentLang === "ar"
+
+                    ? "⏳ جارٍ الإضافة..."
+
+                    : "⏳ Adding...";
+
+
+                try{
+
+                    const response =
+                        await fetch(
+                            "/api/cart/add",
+                            {
+
+                                method:
+                                    "POST",
+
+                                headers:{
+
+                                    "Content-Type":
+                                        "application/json"
+
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        product_id:
+                                            productId,
+
+                                        quantity:
+                                            1
+
+                                    })
+
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if(
+                        !response.ok ||
+                        !data.success
+                    ){
+
+                        throw new Error(
+
+                            data.error ||
+
+                            (
+                                currentLang === "ar"
+
+                                ? "تعذر إضافة المنتج إلى السلة."
+
+                                : "Could not add the product to cart."
+
+                            )
+
+                        );
+
+                    }
+
+
+                    /*
+                     * تمت الإضافة بنجاح
+                     * الآن ننتقل إلى صفحة السلة.
+                     *
+                     * مهم:
+                     * لا نستخدم url_for('checkout')
+                     * لأن زر شراء الآن هنا يذهب للسلة فقط.
+                     */
+
+                    window.location.href =
+                        "/cart";
+
+
+                }
+
+                catch(error){
+
+                    console.error(
+                        "Buy now error:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message
+                    );
+
+
+                    button.innerHTML =
+                        originalText;
+
+
+                    button.disabled =
+                        false;
+
+                }
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+                  WISHLIST
+===================================================== */
+
+document
+    .querySelectorAll(".favorite-btn")
+    .forEach(btn => {
+
+        btn.addEventListener(
+            "click",
+            function(event){
+
+                event.stopPropagation();
+
+            }
+        );
+
+    });
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,792 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}
+{{ "الرئيسية" if current_lang == "ar" else "Home" }}
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+
+    gap: 25px;
+
+}
+
+
+/* =====================================================
+   TODAY VISITOR SUMMARY
+===================================================== */
+
+.visitor-summary {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 30px;
+
+}
+
+
+.visitor-summary-card {
+
+    background: #ffffff;
+
+    border: 1px solid #f3c4d4;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 8px 20px rgba(216, 111, 157, .10);
+
+    transition: .3s;
+
+}
+
+
+.visitor-summary-card:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 12px 28px rgba(216, 111, 157, .18);
+
+}
+
+
+.visitor-summary-icon {
+
+    font-size: 24px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.visitor-summary-title {
+
+    color: #777;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+
+}
+
+
+.visitor-summary-number {
+
+    color: #d85f91;
+
+    font-size: 32px;
+
+    font-weight: 800;
+
+}
+
+
+/* =====================================================
+   DASHBOARD CARD
+===================================================== */
+
+.dashboard-card {
+
+    display: block;
+
+    background: #fde7ef;
+
+    border: 1px solid #f4bfd0;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    text-decoration: none;
+
+    color: #444;
+
+    box-shadow:
+        0 8px 20px rgba(216, 111, 157, .12);
+
+    transition: .3s;
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+
+.dashboard-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    right: 0;
+
+    height: 5px;
+
+    background: #e26fa7;
+
+}
+
+
+.dashboard-card:hover {
+
+    transform: translateY(-6px);
+
+    background: #fbdce8;
+
+    border-color: #e8a0b9;
+
+    box-shadow:
+        0 12px 30px rgba(216, 111, 157, .22);
+
+}
+
+
+/* =====================================================
+   CARD TITLE
+===================================================== */
+
+.dashboard-card h3 {
+
+    color: #d85f91;
+
+    font-size: 22px;
+
+    margin: 0 0 12px;
+
+    font-weight: 700;
+
+}
+
+
+/* =====================================================
+   CARD DESCRIPTION
+===================================================== */
+
+.dashboard-card p {
+
+    color: #6f5a62;
+
+    line-height: 1.8;
+
+    margin: 0;
+
+    font-size: 15px;
+
+}
+
+
+/* =====================================================
+   NUMBER
+===================================================== */
+
+.visitor-number {
+
+    font-size: 42px;
+
+    font-weight: bold;
+
+    color: #d85f91;
+
+    margin-top: 10px;
+
+}
+
+
+/* =====================================================
+   VISITOR CARD
+===================================================== */
+
+.visitor-card {
+
+    background: #f9d5e3;
+
+}
+
+
+.visitor-card::before {
+
+    background: #d86f9d;
+
+}
+
+
+/* =====================================================
+   VISITOR CARD TITLE
+===================================================== */
+
+.visitor-card h3 {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+/* =====================================================
+   ARROW
+===================================================== */
+
+.details-arrow {
+
+    margin-right: auto;
+
+    font-size: 22px;
+
+    transition: .3s;
+
+}
+
+
+.visitor-card:hover .details-arrow {
+
+    transform: translateX(-6px);
+
+}
+
+
+/* =====================================================
+   ONLINE DOT
+===================================================== */
+
+.online-dot {
+
+    display: inline-block;
+
+    width: 12px;
+
+    height: 12px;
+
+    background: #52c878;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 0 4px rgba(82, 200, 120, .12);
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .visitor-summary {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+@media (max-width: 992px) {
+
+    .dashboard-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 20px;
+
+    }
+
+
+    .dashboard-card {
+
+        padding: 22px;
+
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .visitor-summary {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 14px;
+
+        margin-bottom: 22px;
+
+    }
+
+
+    .visitor-summary-card {
+
+        padding: 17px;
+
+    }
+
+
+    .visitor-summary-number {
+
+        font-size: 28px;
+
+    }
+
+
+    .dashboard-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+
+    }
+
+
+    .dashboard-card {
+
+        padding: 20px;
+
+        border-radius: 16px;
+
+    }
+
+
+    .dashboard-card h3 {
+
+        font-size: 20px;
+
+    }
+
+
+    .dashboard-card p {
+
+        font-size: 14px;
+
+    }
+
+
+    .visitor-number {
+
+        font-size: 36px;
+
+    }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 400px) {
+
+    .visitor-summary {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .visitor-summary-number {
+
+        font-size: 26px;
+
+    }
+
+
+    .dashboard-grid {
+
+        gap: 15px;
+
+    }
+
+
+    .dashboard-card {
+
+        padding: 18px;
+
+    }
+
+
+    .dashboard-card h3 {
+
+        font-size: 18px;
+
+    }
+
+
+    .dashboard-card p {
+
+        font-size: 13px;
+
+        line-height: 1.7;
+
+    }
+
+
+    .visitor-number {
+
+        font-size: 32px;
+
+    }
+
+}
+
+</style>
+
+
+
+<!-- =====================================================
+     TODAY VISITOR SUMMARY
+===================================================== -->
+
+
+
+<!-- =====================================================
+     DASHBOARD GRID
+===================================================== -->
+
+<div class="dashboard-grid">
+
+
+    <!-- =================================================
+         BASIC SETTINGS
+    ================================================== -->
+
+    <a
+        href="#"
+        class="dashboard-card">
+
+        <h3>
+
+            ⚙️
+
+            {{
+                "الإعدادات الأساسية"
+                if current_lang == "ar"
+                else "Basic Settings"
+            }}
+
+        </h3>
+
+        <p>
+
+            {{
+                "إدارة معلومات المتجر واللغة والعملة والإعدادات العامة."
+                if current_lang == "ar"
+                else
+                "Manage store information, language, currency, and general settings."
+            }}
+
+        </p>
+
+    </a>
+
+
+
+    <!-- =================================================
+         PRODUCTS
+    ================================================== -->
+
+    <a
+        href="{{ url_for('add_product') }}"
+        class="dashboard-card">
+
+        <h3>
+
+            📦
+
+            {{
+                "المنتجات"
+                if current_lang == "ar"
+                else "Products"
+            }}
+
+        </h3>
+
+        <p>
+
+            {{
+                "عرض وإدارة جميع منتجات المتجر وتعديل بياناتها وأسعارها وصورها."
+                if current_lang == "ar"
+                else
+                "View and manage all store products, including their details, prices, and images."
+            }}
+
+        </p>
+
+    </a>
+
+
+
+    <!-- =================================================
+         USERS
+    ================================================== -->
+
+    <a
+        href="{{ url_for('admin_users') }}"
+        class="dashboard-card">
+
+        <h3>
+
+            👥
+
+            {{
+                "المستخدمون"
+                if current_lang == "ar"
+                else "Users"
+            }}
+
+        </h3>
+
+        <div class="visitor-number">
+
+            {{ user_count }}
+
+        </div>
+
+        <p>
+
+            {{
+                "إجمالي عدد المستخدمين المسجلين في المتجر."
+                if current_lang == "ar"
+                else
+                "Total number of registered users in the store."
+            }}
+
+        </p>
+
+    </a>
+
+
+
+    <!-- =================================================
+         REVIEWS
+    ================================================== -->
+
+    <a
+        href="{{ url_for('admin_reviews') }}"
+        class="dashboard-card">
+
+        <h3>
+
+            ⭐
+
+            {{
+                "التقييمات"
+                if current_lang == "ar"
+                else "Reviews"
+            }}
+
+        </h3>
+
+        <p>
+
+            {{
+                "عرض تقييمات العملاء وإدارتها."
+                if current_lang == "ar"
+                else
+                "View and manage customer reviews."
+            }}
+
+        </p>
+
+    </a>
+
+
+
+    <!-- =================================================
+         MESSAGES
+    ================================================== -->
+
+    <a
+        href="{{ url_for('admin_messages') }}"
+        class="dashboard-card">
+
+        <h3>
+
+            💌
+
+            {{
+                "الرسائل"
+                if current_lang == "ar"
+                else "Messages"
+            }}
+
+        </h3>
+
+        <p>
+
+            {{
+                "عرض رسائل العملاء والرد عليها."
+                if current_lang == "ar"
+                else
+                "View and reply to customer messages."
+            }}
+
+        </p>
+
+    </a>
+
+
+
+    <!-- =================================================
+         👀 VISITORS
+         كرت واحد فقط للزوار
+    ================================================== -->
+
+    <a
+        href="{{ url_for('admin_visitors') }}"
+        class="dashboard-card visitor-card">
+
+        <h3>
+
+            <span class="online-dot"></span>
+
+            👀
+
+            {{
+                "الزوار"
+                if current_lang == "ar"
+                else "Visitors"
+            }}
+
+            <span class="details-arrow">
+                ←
+            </span>
+
+        </h3>
+
+
+        <div class="visitor-number">
+
+            {{ visitor_count }}
+
+        </div>
+
+
+        <p>
+
+            {{
+                "اضغط لعرض تفاصيل الزوار والزيارات، وزيارات اليوم والزوار النشطين."
+                if current_lang == "ar"
+                else
+                "Click to view visitor details, today's visits, and active visitors."
+            }}
+
+        </p>
+
+    </a>
+
+
+
+    <!-- =================================================
+         EDIT PRODUCTS
+    ================================================== -->
+
+    <a
+        href="{{ url_for('add_product') }}"
+        class="dashboard-card">
+
+        <h3>
+
+            ✏️
+
+            {{
+                "تعديل المنتجات"
+                if current_lang == "ar"
+                else "Edit Products"
+            }}
+
+        </h3>
+
+        <p>
+
+            {{
+                "عرض المنتجات الحالية وتعديل بياناتها وصورها وأسعارها."
+                if current_lang == "ar"
+                else
+                "View your existing products and edit their details, images, and prices."
+            }}
+
+        </p>
+
+    </a>
+
+    <!-- =================================================
+     ADVERTISEMENTS
+================================================== -->
+
+<a
+    href="{{ url_for('admin_advertisements') }}"
+    class="dashboard-card">
+
+    <h3>
+
+        📢
+
+        {{
+
+            "الإعلانات"
+
+            if current_lang == "ar"
+
+            else
+
+            "Advertisements"
+
+        }}
+
+    </h3>
+
+    <p>
+
+        {{
+
+            "إضافة وتعديل وحذف إعلانات الصفحة الرئيسية والتحكم في ظهورها."
+
+            if current_lang == "ar"
+
+            else
+
+            "Add, edit, delete, and control homepage advertisements."
+
+        }}
+
+    </p>
+
+</a>
+
+</div>
+
+
+{% endblock %}

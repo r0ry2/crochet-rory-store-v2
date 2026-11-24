@@ -1,0 +1,939 @@
+<style>
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:0;
+    font-family:Arial, sans-serif;
+    background:#fff8fa;
+    color:#333;
+}
+
+
+/* =====================================================
+   SIDEBAR - RIGHT
+===================================================== */
+
+.sidebar{
+
+    position:fixed;
+
+    top:0;
+    right:0;
+    bottom:0;
+
+    width:250px;
+
+    background:#ffffff;
+
+    padding:30px 18px;
+
+    box-shadow:
+        -4px 0 20px rgba(0,0,0,.08);
+
+    z-index:1000;
+
+    overflow-y:auto;
+
+}
+
+
+/* =====================================================
+   SIDEBAR TITLE
+===================================================== */
+
+.sidebar h2{
+
+    font-size:24px;
+
+    font-weight:800;
+
+    white-space:nowrap;
+
+    text-align:center;
+
+    margin:0 0 30px;
+
+    color:#d86f9d;
+
+}
+
+
+/* =====================================================
+   SIDEBAR LINKS
+===================================================== */
+
+.sidebar a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    width:100%;
+
+    padding:14px 16px;
+
+    margin-bottom:8px;
+
+    border-radius:12px;
+
+    text-decoration:none;
+
+    color:#555;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+
+.sidebar a:hover{
+
+    background:#fdecef;
+
+    color:#d86f9d;
+
+    transform:translateX(-3px);
+
+}
+
+
+.sidebar a.active{
+
+    background:#d88ea4;
+
+    color:#fff;
+
+    box-shadow:
+        0 5px 15px rgba(216,142,164,.25);
+
+}
+
+
+/* =====================================================
+   MENU BADGE
+===================================================== */
+
+.menu-badge{
+
+    margin-right:auto;
+
+    min-width:24px;
+
+    height:24px;
+
+    padding:0 7px;
+
+    border-radius:50px;
+
+    background:#e26fa7;
+
+    color:#fff;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+
+/* =====================================================
+   SIDEBAR HR
+===================================================== */
+
+.sidebar hr{
+
+    border:0;
+
+    border-top:1px solid #f1d8de;
+
+    margin:20px 5px;
+
+}
+
+
+/* =====================================================
+   TOP BAR
+===================================================== */
+
+.topbar{
+
+    margin-right:250px;
+
+    margin-left:0;
+
+    min-height:90px;
+
+    padding:20px 35px;
+
+    background:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.05);
+
+}
+
+
+/* =====================================================
+   TOP BAR TITLE
+===================================================== */
+
+.topbar h1{
+
+    margin:0;
+
+    color:#d86f9d;
+
+    font-size:28px;
+
+}
+
+
+.topbar p{
+
+    margin:6px 0 0;
+
+    color:#777;
+
+    font-size:14px;
+
+}
+
+
+/* =====================================================
+   LANGUAGE BUTTON
+===================================================== */
+
+.language-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:10px 18px;
+
+    border-radius:10px;
+
+    background:#fdecef;
+
+    color:#d86f9d;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+
+.language-btn:hover{
+
+    background:#d88ea4;
+
+    color:#fff;
+
+}
+
+
+/* =====================================================
+   PAGE CONTENT
+===================================================== */
+
+.content{
+
+    margin-right:250px;
+
+    margin-left:0;
+
+    padding:35px;
+
+    min-height:calc(100vh - 90px);
+
+}
+
+
+/* =====================================================
+   PINK CARDS
+===================================================== */
+
+.card{
+
+    background:#fff0f5;
+
+    border:1px solid #f5c6d6;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:
+        0 8px 20px rgba(216,142,164,.12);
+
+    transition:.3s;
+
+}
+
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 12px 28px rgba(216,142,164,.20);
+
+}
+
+
+/* =====================================================
+   COMMON ADMIN BOXES
+===================================================== */
+
+.dashboard-card,
+.stat-card,
+.order-card,
+.user-card,
+.review-card,
+.message-card,
+.coupon-card{
+
+    background:#fff0f5;
+
+    border:1px solid #f3c4d4;
+
+    border-radius:18px;
+
+    box-shadow:
+        0 8px 22px rgba(216,142,164,.12);
+
+    transition:.3s;
+
+}
+
+
+.dashboard-card:hover,
+.stat-card:hover,
+.order-card:hover,
+.user-card:hover,
+.review-card:hover,
+.message-card:hover,
+.coupon-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 12px 30px rgba(216,142,164,.20);
+
+}
+
+
+/* =====================================================
+   SIDEBAR SCROLLBAR
+===================================================== */
+
+.sidebar::-webkit-scrollbar{
+
+    width:6px;
+
+}
+
+
+.sidebar::-webkit-scrollbar-track{
+
+    background:#fff;
+
+}
+
+
+.sidebar::-webkit-scrollbar-thumb{
+
+    background:#e8a9bc;
+
+    border-radius:10px;
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width:992px){
+
+    .sidebar{
+
+        width:220px;
+
+        padding:25px 14px;
+
+    }
+
+
+    .sidebar h2{
+
+        font-size:22px;
+
+        margin-bottom:25px;
+
+    }
+
+
+    .sidebar a{
+
+        padding:12px 13px;
+
+        font-size:14px;
+
+    }
+
+
+    .topbar{
+
+        margin-right:220px;
+
+        margin-left:0;
+
+        padding:18px 25px;
+
+    }
+
+
+    .topbar h1{
+
+        font-size:24px;
+
+    }
+
+
+    .content{
+
+        margin-right:220px;
+
+        margin-left:0;
+
+        padding:25px;
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width:600px){
+
+    /* SIDEBAR */
+
+    .sidebar{
+
+        position:relative;
+
+        top:auto;
+
+        right:auto;
+
+        bottom:auto;
+
+        width:100%;
+
+        height:auto;
+
+        min-height:auto;
+
+        padding:18px 12px;
+
+        box-shadow:
+            0 5px 20px rgba(0,0,0,.08);
+
+        overflow:visible;
+
+    }
+
+
+    .sidebar h2{
+
+        font-size:20px;
+
+        margin:0 0 18px;
+
+        letter-spacing:-0.3px;
+
+    }
+
+
+    .sidebar a{
+
+        padding:11px 12px;
+
+        margin-bottom:6px;
+
+        font-size:14px;
+
+        border-radius:10px;
+
+    }
+
+
+    .sidebar a:hover{
+
+        transform:none;
+
+    }
+
+
+    .sidebar hr{
+
+        margin:14px 5px;
+
+    }
+
+
+    /* TOP BAR */
+
+    .topbar{
+
+        margin-right:0;
+
+        margin-left:0;
+
+        min-height:auto;
+
+        padding:18px 15px;
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+        text-align:center;
+
+        gap:15px;
+
+    }
+
+
+    .topbar h1{
+
+        font-size:22px;
+
+    }
+
+
+    .topbar p{
+
+        font-size:13px;
+
+    }
+
+
+    .language-btn{
+
+        width:100%;
+
+        padding:10px;
+
+    }
+
+
+    /* CONTENT */
+
+    .content{
+
+        margin-right:0;
+
+        margin-left:0;
+
+        padding:20px 12px;
+
+        min-height:auto;
+
+    }
+
+
+    /* PINK CARDS */
+
+    .card,
+    .dashboard-card,
+    .stat-card,
+    .order-card,
+    .user-card,
+    .review-card,
+    .message-card,
+    .coupon-card{
+
+        width:100%;
+
+        padding:18px;
+
+        border-radius:15px;
+
+    }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width:400px){
+
+    .sidebar{
+
+        padding:15px 10px;
+
+    }
+
+
+    .sidebar h2{
+
+        font-size:18px;
+
+        margin-bottom:15px;
+
+    }
+
+
+    .sidebar a{
+
+        font-size:13px;
+
+        padding:10px;
+
+    }
+
+
+    .topbar{
+
+        padding:15px 10px;
+
+    }
+
+
+    .topbar h1{
+
+        font-size:19px;
+
+    }
+
+
+    .topbar p{
+
+        font-size:12px;
+
+    }
+
+
+    .content{
+
+        padding:15px 10px;
+
+    }
+
+}
+
+</style>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<div class="sidebar">
+
+
+    <h2>
+
+        🧶
+
+        {{
+            "متجر روري"
+            if current_lang=="ar"
+            else "Rory Store"
+        }}
+
+    </h2>
+
+
+    <!-- HOME -->
+
+    <a
+        href="{{ url_for('admin_home') }}"
+        class="{% if request.endpoint=='admin_home' %}active{% endif %}">
+
+        🏠
+
+        {{
+            "الرئيسية"
+            if current_lang=="ar"
+            else "Home"
+        }}
+
+    </a>
+
+
+    <!-- ORDERS -->
+
+    <a
+        href="{{ url_for('admin_orders') }}"
+        class="{% if request.endpoint=='admin_orders' %}active{% endif %}">
+
+        📦
+
+        {{
+            "الطلبات"
+            if current_lang=="ar"
+            else "Orders"
+        }}
+
+
+        {% if unread_notifications > 0 %}
+
+            <span class="menu-badge">
+
+                {{ unread_notifications }}
+
+            </span>
+
+        {% endif %}
+
+    </a>
+
+
+    <!-- DASHBOARD -->
+
+    <a
+        href="{{ url_for('admin_dashboard') }}"
+        class="{% if request.endpoint=='admin_dashboard' %}active{% endif %}">
+
+        📊
+
+        {{
+            "لوحة المعلومات"
+            if current_lang=="ar"
+            else "Dashboard"
+        }}
+
+    </a>
+
+
+    <!-- ADD PRODUCT -->
+
+<a
+    href="{{ url_for('add_product') }}"
+    class="{% if request.endpoint=='add_product' %}active{% endif %}">
+
+    ➕
+
+    {{
+        "المنتجات"
+        if current_lang=="ar"
+        else "Products"
+    }}
+
+</a>
+
+
+    <!-- COUPONS -->
+
+    <a
+        href="{{ url_for('admin_coupons') }}"
+        class="{% if request.endpoint=='admin_coupons' %}active{% endif %}">
+
+        🎟️
+
+        {{
+            "الكوبونات"
+            if current_lang=="ar"
+            else "Coupons"
+        }}
+
+    </a>
+
+
+    <!-- USERS -->
+
+    <a
+        href="{{ url_for('admin_users') }}"
+        class="{% if current_lang=="ar" %}active{% endif %}">
+
+        👥
+
+        {{
+            "المستخدمون"
+            if current_lang=="ar"
+            else "Users"
+        }}
+
+    </a>
+
+
+    <!-- REVIEWS -->
+
+    <a
+        href="{{ url_for('admin_reviews') }}"
+        class="{% if request.endpoint=='admin_reviews' %}active{% endif %}">
+
+        ⭐
+
+        {{
+            "التقييمات"
+            if current_lang=="ar"
+            else "Reviews"
+        }}
+
+    </a>
+
+
+    <!-- MESSAGES -->
+
+    <a
+        href="{{ url_for('admin_messages') }}"
+        class="{% if request.endpoint=='admin_messages' %}active{% endif %}">
+
+        💌
+
+        {{
+            "الرسائل"
+            if current_lang=="ar"
+            else "Messages"
+        }}
+
+    </a>
+    <!-- ADVERTISEMENTS -->
+
+<a
+    href="{{ url_for('admin_advertisements') }}"
+    class="{% if request.endpoint in [
+        'admin_advertisements',
+        'admin_add_advertisement',
+        'admin_edit_advertisement'
+    ] %}active{% endif %}">
+
+    📢
+
+    {{
+        "الإعلانات"
+        if current_lang=="ar"
+        else "Advertisements"
+    }}
+
+</a>
+
+
+    <!-- LOGOUT -->
+
+    <a
+        href="{{ url_for('logout') }}">
+
+        🚪
+
+        {{
+            "تسجيل الخروج"
+            if current_lang=="ar"
+            else "Logout"
+        }}
+
+    </a>
+
+
+</div>
+
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
+
+<div class="topbar">
+
+
+    <div>
+
+        <h1>
+
+            {{ _("Admin Panel") }}
+
+        </h1>
+
+
+        <p>
+
+            {{ _("Welcome back Admin") }} 💕
+
+        </p>
+
+    </div>
+
+
+    <div>
+
+        {% if current_lang == "ar" %}
+
+            <a
+                href="{{ url_for('change_language', lang='en') }}"
+                class="language-btn">
+
+                🇺🇸 English
+
+            </a>
+
+        {% else %}
+
+            <a
+                href="{{ url_for('change_language', lang='ar') }}"
+                class="language-btn">
+
+                🇸🇦 العربية
+
+            </a>
+
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     PAGE CONTENT
+===================================================== -->
+
+<div class="content">
+
+    {% block content %}
+
+    {% endblock %}
+
+</div>
