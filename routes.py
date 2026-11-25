@@ -6634,5 +6634,27 @@ def reply_review(id):
 
     return redirect(url_for("admin_reviews"))
 
+# TEMPORARY ADMIN RECOVERY - REMOVE AFTER USE
 
+@app.route("/temporary-admin-recovery")
+def temporary_admin_recovery():
+
+    recovery_key = os.environ.get("ADMIN_RECOVERY_KEY")
+    provided_key = request.args.get("key")
+
+    if not recovery_key or provided_key != recovery_key:
+        return "Unauthorized", 403
+
+    email = "crochet.rory.store@gmail.com"
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        return "Account not found", 404
+
+    user.role = "admin"
+
+    db.session.commit()
+
+    return "Admin access restored successfully."
 
