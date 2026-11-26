@@ -6635,25 +6635,7 @@ def reply_review(id):
     return redirect(url_for("admin_reviews"))
 
 
-# TEMPORARY ADMIN RECOVERY
 
-import hmac
-
-@app.route("/temporary-admin-recovery", methods=["GET", "POST"])
-def temporary_admin_recovery():
-
-    if request.method == "GET":
-        return """
-        <form method="POST">
-            <label>Recovery Key:</label>
-            <input type="password" name="key" required>
-            <button type="submit">Recover Admin</button>
-        </form>
-        """
-
-   # TEMPORARY ADMIN RECOVERY
-
-import hmac
 
 @app.route("/temporary-admin-recovery", methods=["GET", "POST"])
 def temporary_admin_recovery():
