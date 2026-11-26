@@ -141,7 +141,7 @@ app.config["SECRET_KEY"] = os.getenv(
 database_url = os.getenv(
     "DATABASE_URL"
 )
-
+print("🔍 DATABASE_URL detected:", bool(database_url))
 
 if database_url:
 
@@ -652,12 +652,11 @@ def track_visitor():
 # ==================================================
 # 📁 Print Database
 # ==================================================
-
 print(
     "📁 Using database:",
-    app.config[
-        "SQLALCHEMY_DATABASE_URI"
-    ]
+    "PostgreSQL"
+    if app.config["SQLALCHEMY_DATABASE_URI"].startswith("postgresql")
+    else "SQLite"
 )
 
 
