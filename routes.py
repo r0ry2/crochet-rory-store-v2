@@ -6634,16 +6634,54 @@ def reply_review(id):
 
     return redirect(url_for("admin_reviews"))
 
-# TEMPORARY ADMIN RECOVERY - REMOVE AFTER USE
 
-@app.route("/temporary-admin-recovery")
+# TEMPORARY ADMIN RECOVERY
+
+import hmac
+
+@app.route("/temporary-admin-recovery", methods=["GET", "POST"])
 def temporary_admin_recovery():
 
-    recovery_key = os.environ.get("ADMIN_RECOVERY_KEY")
-    provided_key = request.args.get("key")
+    if request.method == "GET":
+        return """
+        <form method="POST">
+            <label>Recovery Key:</label>
+            <input type="password" name="key" required>
+            <button type="submit">Recover Admin</button>
+        </form>
+        """
 
-    if not recovery_key or provided_key != recovery_key:
+   # TEMPORARY ADMIN RECOVERY
+
+import hmac
+
+@app.route("/temporary-admin-recovery", methods=["GET", "POST"])
+def temporary_admin_recovery():
+
+    if request.method == "GET":
+        return """
+        <form method="POST">
+            <label>Recovery Key:</label>
+            <input type="password" name="key" required>
+
+            <label>New Password:</label>
+            <input type="password" name="password" minlength="8" required>
+
+            <button type="submit">Recover Admin</button>
+        </form>
+        """
+
+    recovery_key = os.environ.get("ADMIN_RECOVERY_KEY")
+    provided_key = request.form.get("key", "")
+    new_password = request.form.get("password", "")
+
+    if not recovery_key or not hmac.compare_digest(
+        provided_key, recovery_key
+    ):
         return "Unauthorized", 403
+
+    if len(new_password) < 8:
+        return "Password must be at least 8 characters", 400
 
     email = "crochet.rory.store@gmail.com"
 
@@ -6653,8 +6691,8 @@ def temporary_admin_recovery():
         return "Account not found", 404
 
     user.role = "admin"
+    user.set_password(new_password)
 
     db.session.commit()
 
-    return "Admin access restored successfully."
-
+    return "Admin access and password restored successfully."
