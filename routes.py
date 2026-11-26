@@ -510,7 +510,7 @@ def edit_product(id):
     # 📝 GET FORM
     # ==================================================
 
-    form = ProductForm()
+    form = AddProductForm()
 
     # ==================================================
     # 🖼️ IMAGE
@@ -841,7 +841,7 @@ def add_product():
     # 📝 PRODUCT FORM
     # ==================================================
 
-    form = ProductForm()
+    form = AddProductForm()
 
     # ==================================================
     # 📦 GET EXISTING PRODUCTS
@@ -6036,7 +6036,7 @@ def admin_products():
     # ومنها is_customizable
     # ==================================================
 
-    form = ProductForm()
+    form = AddProductForm()
 
 
     # ==================================================
