@@ -24,6 +24,7 @@ import os
 import re
 import secrets
 import uuid
+import hmac
 
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
