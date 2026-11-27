@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="{{ current_lang }}" dir="{{ 'rtl' if current_lang == 'ar' else 'ltr' }}">
 
@@ -1471,11 +1472,12 @@ if(advertisementSlides.length > 1){
                  onclick="window.location.href='{{ url_for('product_details', product_id=product.id) }}'">
 
 
-                <img src="{{ url_for(
-                    'static',
-                    filename='uploads/products/' ~ product.image
-                ) }}"
-                     alt="{{ product.name }}">
+                {% if product.image %}
+                <img
+                    src="{% if product.image.startswith('http') %}{{ product.image }}{% else %}{{ url_for('static', filename='uploads/products/' ~ product.image) }}{% endif %}"
+                    alt="{{ product.name }}"
+                >
+                {% endif %}
 
 
                 <h3>
