@@ -1,3 +1,4 @@
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 
@@ -16,21 +17,20 @@ from wtforms.validators import (
     Email,
     EqualTo,
     Regexp,
-    ValidationError,  
+    ValidationError,
     Length
 )
 
 import re
+
+
 # ==================================================
 # 🧶 PRODUCT FORM
 # ==================================================
 
 class ProductForm(FlaskForm):
 
-    # ==========================
-    # 🧵 Product Name
-    # ==========================
-
+    # Product Name
     name = StringField(
         "Product Name",
         validators=[
@@ -38,10 +38,7 @@ class ProductForm(FlaskForm):
         ]
     )
 
-    # ==========================
-    # 🏷️ Product Category
-    # ==========================
-
+    # Product Category
     category = SelectField(
         "Category",
         choices=[
@@ -56,44 +53,7 @@ class ProductForm(FlaskForm):
         ]
     )
 
-
-
-# ==================================================
-# 🔐 CUSTOM PASSWORD VALIDATOR
-# ==================================================
-def validate_password_strength(form, field):
-    """
-    يتحقق من قوة كلمة المرور:
-    - 8 أحرف على الأقل
-    - حرف كبير واحد على الأقل
-    - رقم واحد على الأقل
-    - رمز خاص واحد على الأقل
-    """
-    password = field.data
-    
-    if len(password) < 8:
-        raise ValidationError(
-            "كلمة المرور يجب أن تكون 8 أحرف على الأقل."
-        )
-    
-    if not re.search(r'[A-Z]', password):
-        raise ValidationError(
-            "كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل."
-        )
-    
-    if not re.search(r'\d', password):
-        raise ValidationError(
-            "كلمة المرور يجب أن تحتوي على رقم واحد على الأقل."
-        )
-    
-    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
-        raise ValidationError(
-            "كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل (!@#$%^&*)."
-        )
-    # ==========================
-    # 💰 Product Price
-    # ==========================
-
+    # Product Price
     price = FloatField(
         "Price",
         validators=[
@@ -101,10 +61,7 @@ def validate_password_strength(form, field):
         ]
     )
 
-    # ==========================
-    # 📜 Product Description
-    # ==========================
-
+    # Product Description
     description = TextAreaField(
         "Description",
         validators=[
@@ -112,10 +69,7 @@ def validate_password_strength(form, field):
         ]
     )
 
-    # ==========================
-    # 🖼️ Product Image
-    # ==========================
-
+    # Product Image
     image = FileField(
         "Product Image",
         validators=[
@@ -126,10 +80,7 @@ def validate_password_strength(form, field):
         ]
     )
 
-    # ==========================
-    # 📍 Publish Location
-    # ==========================
-
+    # Publish Location
     publish_location = SelectField(
         "Publish Product",
         choices=[
@@ -145,32 +96,60 @@ def validate_password_strength(form, field):
         default="products_only"
     )
 
-    # ==========================
-    # ✨ Customization
-    # هل المنتج قابل للتخصيص؟
-    # ==========================
-
+    # Customization
     is_customizable = BooleanField(
         "Allow Customization",
         default=False
     )
 
-    # ==========================
-    # 💾 Submit
-    # ==========================
+    # Submit
+    submit = SubmitField("Save")
 
-    submit = SubmitField(
-        "Save"
-    )
+
+# ==================================================
+# 🔐 CUSTOM PASSWORD VALIDATOR
+# ==================================================
+
+def validate_password_strength(form, field):
+
+    """
+    يتحقق من قوة كلمة المرور:
+    - 8 أحرف على الأقل
+    - حرف كبير واحد على الأقل
+    - رقم واحد على الأقل
+    - رمز خاص واحد على الأقل
+    """
+
+    password = field.data
+
+    if len(password) < 8:
+        raise ValidationError(
+            "كلمة المرور يجب أن تكون 8 أحرف على الأقل."
+        )
+
+    if not re.search(r'[A-Z]', password):
+        raise ValidationError(
+            "كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل."
+        )
+
+    if not re.search(r'\d', password):
+        raise ValidationError(
+            "كلمة المرور يجب أن تحتوي على رقم واحد على الأقل."
+        )
+
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+        raise ValidationError(
+            "كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل (!@#$%^&*)."
+        )
 
 
 # ==================================================
 # 👤 REGISTER FORM
 # ==================================================
+
 class RegisterForm(FlaskForm):
-    # ==========================
-    # 👤 Username
-    # ==========================
+
+    # Username
     username = StringField(
         "Username",
         validators=[
@@ -178,10 +157,8 @@ class RegisterForm(FlaskForm):
             Length(min=3, max=25)
         ]
     )
-    
-    # ==========================
-    # 📧 Email
-    # ==========================
+
+    # Email
     email = StringField(
         "Email",
         validators=[
@@ -189,10 +166,8 @@ class RegisterForm(FlaskForm):
             Email()
         ]
     )
-    
-    # ==========================
-    # 📱 Phone Number
-    # ==========================
+
+    # Phone Number
     phone = StringField(
         "Phone Number",
         validators=[
@@ -203,33 +178,31 @@ class RegisterForm(FlaskForm):
             )
         ]
     )
-    
-    # ==========================
-    #  Password
-    # ==========================
+
+    # Password
     password = PasswordField(
         "Password",
         validators=[
             DataRequired(),
-            validate_password_strength  # ← أضفنا الـ validator الجديد
+            validate_password_strength
         ]
     )
-    
-    # ==========================
-    # 🔐 Confirm Password
-    # ==========================
+
+    # Confirm Password
     confirm_password = PasswordField(
         "Confirm Password",
         validators=[
             DataRequired(),
-            EqualTo("password", message="كلمتا المرور غير متطابقتين.")
+            EqualTo(
+                "password",
+                message="كلمتا المرور غير متطابقتين."
+            )
         ]
     )
-    
-    # ==========================
-    #  Submit
-    # ==========================
+
+    # Submit
     submit = SubmitField("Register")
+
 
 # ==================================================
 # 🔐 LOGIN FORM
@@ -237,10 +210,7 @@ class RegisterForm(FlaskForm):
 
 class LoginForm(FlaskForm):
 
-    # ==========================
-    # 📧 Email
-    # ==========================
-
+    # Email
     email = StringField(
         "Email",
         validators=[
@@ -249,10 +219,7 @@ class LoginForm(FlaskForm):
         ]
     )
 
-    # ==========================
-    # 🔑 Password
-    # ==========================
-
+    # Password
     password = PasswordField(
         "Password",
         validators=[
@@ -260,13 +227,8 @@ class LoginForm(FlaskForm):
         ]
     )
 
-    # ==========================
-    # 🔓 Submit
-    # ==========================
-
-    submit = SubmitField(
-        "Login"
-    )
+    # Submit
+    submit = SubmitField("Login")
 
 
 # ==================================================
@@ -275,10 +237,7 @@ class LoginForm(FlaskForm):
 
 class VerifyCodeForm(FlaskForm):
 
-    # ==========================
-    # 🔢 Verification Code
-    # ==========================
-
+    # Verification Code
     code = StringField(
         "Verification Code",
         validators=[
@@ -290,10 +249,5 @@ class VerifyCodeForm(FlaskForm):
         ]
     )
 
-    # ==========================
-    # ✅ Submit
-    # ==========================
-
-    submit = SubmitField(
-        "Verify"
-    )
+    # Submit
+    submit = SubmitField("Verify")

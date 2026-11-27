@@ -7,6 +7,7 @@ from flask_wtf.file import FileAllowed
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from wtforms import (
+    BooleanField,
     FileField,
     FloatField,
     SelectField,
@@ -40,6 +41,15 @@ class AddProductForm(FlaskForm):
     description = TextAreaField(
         "Description",
         validators=[DataRequired()]
+    )
+    category = StringField(
+        "Category",
+        validators=[DataRequired()]
+    )
+
+    is_customizable = BooleanField(
+        "Customizable",
+        default=False
     )
 
     image = FileField(

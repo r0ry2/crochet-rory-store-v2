@@ -472,6 +472,7 @@ def search():
 
 
 
+
 # ==================================================
 # ✏️ EDIT PRODUCT
 # ==================================================
@@ -513,25 +514,37 @@ def edit_product(id):
     form = AddProductForm()
 
     # ==================================================
-    # 🖼️ IMAGE
+    # 🖼️ IMAGE - CLOUDINARY
     # ==================================================
 
+    # الاحتفاظ بالصورة القديمة إذا لم يتم اختيار صورة جديدة
     filename = product.image
 
     if form.image.data:
+
         image_file = form.image.data
 
         if image_file.filename:
-            filename = secure_filename(image_file.filename)
 
-            image_path = os.path.join(
-                app.root_path,
-                "static",
-                "images",
-                filename
+            uploaded_image = upload_image_to_cloudinary(
+                image_file,
+                folder="crochet_rory/products"
             )
 
-            image_file.save(image_path)
+            if not uploaded_image:
+
+                flash(
+                    "❌ فشل رفع الصورة إلى Cloudinary."
+                    if current_lang == "ar"
+                    else "❌ Failed to upload image to Cloudinary.",
+                    "danger"
+                )
+
+                return redirect(
+                    url_for("admin_products")
+                )
+
+            filename = uploaded_image
 
     # ==================================================
     # 📦 QUANTITY
@@ -647,7 +660,7 @@ def edit_product(id):
     # الوصف
     product.description = form.description.data
 
-    # الصورة
+    # الصورة - Cloudinary
     product.image = filename
 
     # مكان العرض
@@ -669,7 +682,29 @@ def edit_product(id):
     # 💾 SAVE CHANGES
     # ==================================================
 
-    db.session.commit()
+    try:
+
+        db.session.commit()
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print(
+            "❌ EDIT PRODUCT ERROR:",
+            e
+        )
+
+        flash(
+            "❌ حدث خطأ أثناء تعديل المنتج."
+            if current_lang == "ar"
+            else "❌ An error occurred while updating the product.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin_products")
+        )
 
     # ==================================================
     # ✅ SUCCESS MESSAGE
@@ -688,7 +723,9 @@ def edit_product(id):
     # ↩️ BACK TO PRODUCTS
     # ==================================================
 
-    return redirect(url_for("admin_products"))
+    return redirect(
+        url_for("admin_products")
+    )
 
 # ==================================================
 # 🗑️ DELETE PRODUCT
@@ -807,6 +844,7 @@ def delete_product(id):
     return redirect(url_for("admin_products"))
 
 
+
 # ==================================================
 # ➕ ADD PRODUCT
 # ==================================================
@@ -858,52 +896,25 @@ def add_product():
     if form.validate_on_submit():
 
         # ==================================================
-        # 🖼️ IMAGE
+        # 🖼️ IMAGE - CLOUDINARY
         # ==================================================
 
         filename = None
 
-        if form.image.data:
+        if form.image.data and form.image.data.filename:
 
-            image_file = form.image.data
+            filename = upload_image_to_cloudinary(
+                form.image.data,
+                folder="crochet_rory/products"
+            )
 
-            if image_file.filename:
-
-                filename = secure_filename(
-                    image_file.filename
+            if not filename:
+                flash(
+                    "❌ فشل رفع الصورة، حاولي مرة أخرى.",
+                    "danger"
                 )
-
-                # ==================================================
-                # 📁 CREATE UPLOADS FOLDER
-                # ==================================================
-
-                upload_folder = os.path.join(
-                    app.root_path,
-                    "static",
-                    "uploads",
-                    "products"
-                )
-
-                os.makedirs(
-                    upload_folder,
-                    exist_ok=True
-                )
-
-                # ==================================================
-                # 📍 IMAGE PATH
-                # ==================================================
-
-                image_path = os.path.join(
-                    upload_folder,
-                    filename
-                )
-
-                # ==================================================
-                # 💾 SAVE IMAGE TO VOLUME
-                # ==================================================
-
-                image_file.save(
-                    image_path
+                return redirect(
+                    url_for("add_product")
                 )
 
         # ==================================================
@@ -968,12 +979,10 @@ def add_product():
 
             # منع السعر المخفض من أن يكون سالبًا
             if sale_price < 0:
-
                 sale_price = None
 
             # إذا كان السعر المخفض أكبر أو يساوي السعر الأصلي
             elif sale_price >= form.price.data:
-
                 sale_price = None
 
         # ==================================================
