@@ -1,3 +1,4 @@
+
 {% extends "base_logged.html" %}
 
 {% block title %}
@@ -1238,12 +1239,7 @@ body{
             {% if product.image %}
 
             <img
-                src="{{
-                    url_for(
-                        'static',
-                        filename='uploads/products/' ~ product.image
-                    )
-                }}"
+                src="{% if product.image.startswith('http') %}{{ product.image }}{% else %}{{ url_for('static', filename='uploads/products/' ~ product.image) }}{% endif %}"
                 alt="{{ product.name }}"
             >
 

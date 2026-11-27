@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% block title %}Crochet Rory Store{% endblock %}
 {% block content %}
@@ -614,8 +615,11 @@
 
             <div class="product">
 
-                <img src="{{ url_for('static', filename='uploads/products/' ~ product.image) }}"
-                     alt="{{ product.name }}">
+                <!-- PRODUCT IMAGE: CLOUDINARY + LOCAL SUPPORT -->
+                <img
+                    src="{% if product.image and product.image.startswith('http') %}{{ product.image }}{% elif product.image %}{{ url_for('static', filename='uploads/products/' ~ product.image) }}{% else %}{{ url_for('static', filename='images/hero.png') }}{% endif %}"
+                    alt="{{ product.name }}"
+                >
 
                 <h3>{{ product.name }}</h3>
 

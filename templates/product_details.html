@@ -1002,7 +1002,7 @@ body{
         {% if product.image %}
 
             <img
-                src="{{ url_for('static', filename='uploads/products/' ~ product.image) }}"
+                src="{% if product.image.startswith('http') %}{{ product.image }}{% else %}{{ url_for('static', filename='uploads/products/' ~ product.image) }}{% endif %}"
                 alt="{{ product.name }}"
             >
 
@@ -1657,7 +1657,7 @@ body{
             {% if item.image %}
 
                 <img
-                    src="{{ url_for('static', filename='uploads/products/' ~ item.image) }}"
+                    src="{% if item.image.startswith('http') %}{{ item.image }}{% else %}{{ url_for('static', filename='uploads/products/' ~ item.image) }}{% endif %}"
                     alt="{{ item.name }}"
                 >
 
