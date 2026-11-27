@@ -415,6 +415,77 @@ with app.app_context():
     )
 
 
+    # ==================================================
+    # 🔐 Update Existing User Table - Password Reset
+    # ==================================================
+
+    inspector = inspect(db.engine)
+
+    user_columns = {
+        column["name"]
+        for column in inspector.get_columns("user")
+    }
+
+    print(
+        "🔎 USER DATABASE COLUMNS:",
+        sorted(user_columns)
+    )
+
+    # ----------------------------------------------
+    # Add reset_code
+    # ----------------------------------------------
+
+    if "reset_code" not in user_columns:
+
+        with db.engine.begin() as connection:
+
+            connection.execute(
+                text(
+                    """
+                    ALTER TABLE "user"
+                    ADD COLUMN reset_code VARCHAR(6)
+                    """
+                )
+            )
+
+        print("✅ Added reset_code column")
+
+    # ----------------------------------------------
+    # Add reset_code_expiry
+    # ----------------------------------------------
+
+    if "reset_code_expiry" not in user_columns:
+
+        with db.engine.begin() as connection:
+
+            connection.execute(
+                text(
+                    """
+                    ALTER TABLE "user"
+                    ADD COLUMN reset_code_expiry TIMESTAMP
+                    """
+                )
+            )
+
+        print("✅ Added reset_code_expiry column")
+
+    # ----------------------------------------------
+    # Verify User Columns
+    # ----------------------------------------------
+
+    inspector = inspect(db.engine)
+
+    final_user_columns = {
+        column["name"]
+        for column in inspector.get_columns("user")
+    }
+
+    print(
+        "✅ FINAL USER DATABASE COLUMNS:",
+        sorted(final_user_columns)
+    )
+
+
 # ==================================================
 # 🔑 Flask Login
 # ==================================================

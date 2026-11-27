@@ -271,6 +271,15 @@ class User(UserMixin, db.Model):
         db.DateTime,
         nullable=True
     )
+        reset_code = db.Column(
+        db.String(6),
+        nullable=True
+    )
+
+    reset_code_expiry = db.Column(
+        db.DateTime,
+        nullable=True
+    )
 
     phone = db.Column(
         db.String(20),
