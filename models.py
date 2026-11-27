@@ -1,3 +1,4 @@
+
 from datetime import datetime
 
 from flask_login import UserMixin
@@ -42,6 +43,7 @@ class AddProductForm(FlaskForm):
         "Description",
         validators=[DataRequired()]
     )
+
     category = StringField(
         "Category",
         validators=[DataRequired()]
@@ -271,7 +273,12 @@ class User(UserMixin, db.Model):
         db.DateTime,
         nullable=True
     )
-        reset_code = db.Column(
+
+    # ==================================================
+    # 🔐 PASSWORD RESET
+    # ==================================================
+
+    reset_code = db.Column(
         db.String(6),
         nullable=True
     )
@@ -412,6 +419,8 @@ class Cart(db.Model):
             f"{self.product_id} - "
             f"{self.selected_size}>"
         )
+
+
 # ==================================================
 # ❤️ WISHLIST
 # ==================================================
@@ -787,6 +796,8 @@ class OrderItem(db.Model):
             f"product={self.product_id}, "
             f"size={self.selected_size}>"
         )
+
+
 # ==================================================
 # 🚚 SHIPPING METHOD
 # ==================================================
@@ -1044,6 +1055,8 @@ class Message(db.Model):
             lazy=True
         )
     )
+
+
 # ==================================================
 # ⭐ REVIEWS
 # ==================================================
