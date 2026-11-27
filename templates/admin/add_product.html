@@ -881,7 +881,7 @@ textarea.form-control {
                     {% if product.image %}
 
                         <img
-                            src="{{ url_for('static', filename='uploads/products/' ~ product.image) }}"
+                            src="{{ product.image if product.image.startswith('http') else url_for('static', filename='uploads/products/' ~ product.image) }}"
                             alt="{{ product.name }}"
                         >
 
@@ -2246,7 +2246,7 @@ textarea.form-control {
                     </span>
 
                     <img
-                        src="{{ url_for('static', filename='uploads/products/' ~ product.image) }}"
+                        src="{{ product.image if product.image.startswith('http') else url_for('static', filename='uploads/products/' ~ product.image) }}"
                         alt="{{ product.name }}">
 
                 </div>
